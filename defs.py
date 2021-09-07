@@ -38,3 +38,5 @@ SCHEMA_IDS = [
     'RuuJwd3JMffNwZ43DcJKN1:2:Vaccination:1.4',
     'RuuJwd3JMffNwZ43DcJKN1:2:Vaccine_Exemption:1.4'
 ]
+
+LAB_RESULT_SCHEMA_ID = 'RuuJwd3JMffNwZ43DcJKN1:2:Lab_Result:1.4'
