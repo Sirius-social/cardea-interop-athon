@@ -14,6 +14,9 @@ ISSUER = {
     'VERKEY': 'CmNrnhsQrsGSEaVX8MQ34RYQwekcrBWHQeUSZxCYQNBT'
 }
 
+LAB_AGENT_CREDS = ISSUER
+LAB_DID = LAB_AGENT_CREDS["DID"]
+
 
 VERIFIER = {
     'SDK': {
@@ -28,6 +31,10 @@ VERIFIER = {
     'VERKEY': 'AfNcBeyuPZ5WKbiNQKw9vogzkYQggU8BsaTyAaMDfkQv'
 }
 
+GOV_AGENT_CREDS = VERIFIER
+GOV_DID = GOV_AGENT_CREDS['DID']
+VERIFIER_AGENT_CREDS = VERIFIER
+
 
 # See all: https://github.com/thecardeaproject/cardea/tree/main/schemas
 SCHEMA_IDS = [
@@ -41,3 +48,4 @@ SCHEMA_IDS = [
 
 LAB_RESULT_SCHEMA_ID = 'RuuJwd3JMffNwZ43DcJKN1:2:Lab_Result:1.4'
 LAB_VACCINATION_SCHEMA_ID = 'RuuJwd3JMffNwZ43DcJKN1:2:Vaccination:1.4'
+TRUSTED_TRAVELER_SCHEMA_ID = 'RuuJwd3JMffNwZ43DcJKN1:2:Trusted_Traveler:1.4'

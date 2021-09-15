@@ -10,7 +10,7 @@ from PIL import Image
 from aioconsole import ainput
 
 import sirius_sdk
-from defs import ISSUER, LAB_RESULT_SCHEMA_ID, LAB_VACCINATION_SCHEMA_ID
+from defs import LAB_AGENT_CREDS, LAB_RESULT_SCHEMA_ID, LAB_VACCINATION_SCHEMA_ID
 from sirius_sdk.agent.aries_rfc.feature_0160_connection_protocol import *
 from sirius_sdk.agent.aries_rfc.feature_0037_present_proof import *
 
@@ -51,8 +51,9 @@ class Laboratory:
         return schema, cred_def
 
     async def load_schemas(self):
+        print("loading schemas")
         self.lab_result_schema, self.lab_result_cred_def = await self.get_schema(LAB_RESULT_SCHEMA_ID)
-        self.vaccination_schema, self.vaccination_cred_def = await self.get_schema(LAB_VACCINATION_SCHEMA_ID)
+        #self.vaccination_schema, self.vaccination_cred_def = await self.get_schema(LAB_VACCINATION_SCHEMA_ID)
 
     async def generate_invitation(self):
         connection_key = await sirius_sdk.Crypto.create_key()
@@ -165,7 +166,7 @@ def generate_random_lab_result():
         "lab_description": "IndiLynx driven test lab",
         "lab_order_id": uuid.uuid4().hex,
         "lab_normality": "normal",
-        "lab_result": "1",
+        "lab_result": "0",
         "lab_comment": "foo",
         "ordering_facility_id": uuid.uuid4().hex,
         "ordering_facility_id_qualifier": uuid.uuid4().hex,
@@ -233,15 +234,13 @@ def generate_random_vaccination():
 
 
 if __name__ == '__main__':
-    sirius_sdk.init(**ISSUER['SDK'])
+    sirius_sdk.init(**LAB_AGENT_CREDS['SDK'])
 
-    lab = Laboratory(public_did=ISSUER["DID"])
+    lab = Laboratory(public_did=LAB_AGENT_CREDS["DID"])
 
     asyncio.ensure_future(lab.listen())
 
     async def run():
-        async for i, p in sirius_sdk.PairwiseList.enumerate():
-            print(p.their.did)
         await lab.load_schemas()
 
         while True:
@@ -261,6 +260,8 @@ if __name__ == '__main__':
             elif case == '3':
                 results = generate_random_vaccination()
                 await lab.issue_vaccine(results)
+            elif case == '4':
+                break
             else:
                 pass
 
