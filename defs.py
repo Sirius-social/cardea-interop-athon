@@ -31,6 +31,18 @@ VERIFIER = {
     'VERKEY': 'AfNcBeyuPZ5WKbiNQKw9vogzkYQggU8BsaTyAaMDfkQv'
 }
 
+HOLDER = {
+    'SDK': {
+        'server_uri': 'https://demo.socialsirius.com',
+        'credentials': b'hMPfx0D1ptQa2fK8UPw7p9/Zf/UUEY9Ppk9oU92VO8IUHnc6oP5ov7f9PQ1NLIO5EHcqghOJvRoV7taA/vCd2+gRlardPTGGN2IQ2eifQIUF635ie4lgPZGiJSjWYcXm',
+        'p2p': sirius_sdk.P2PConnection(
+            my_keys=('6AxpcFTPihyWtjWQ35ehnnpJqcP1mmkFecGPgApo28G5',
+                     '33WzfeKMVjcCpNSJEUoXbdSZo174xk1U2aG9ZAwTsWsomw2Dr7MJTkXRxU6CPStr2PJoTdpRtseFCkKo29aDD4BX'),
+            their_verkey='LQuue52xRKEYcZmQ84fzz2dGyXuv5LbyM12pejUg9Hy'
+        )
+    }
+}
+
 GOV_AGENT_CREDS = VERIFIER
 GOV_DID = GOV_AGENT_CREDS['DID']
 VERIFIER_AGENT_CREDS = VERIFIER
