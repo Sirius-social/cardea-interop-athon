@@ -1,6 +1,7 @@
 import sirius_sdk
 import asyncio
 from sirius_sdk.agent.aries_rfc.feature_0160_connection_protocol import *
+from sirius_sdk.errors.indy_exceptions import AnoncredsMasterSecretDuplicateNameError
 import json
 
 from PIL import Image
@@ -21,6 +22,12 @@ from aioconsole import ainput
 
 
 async def run():
+
+    # Ensure master-secret exists
+    try:
+        await sirius_sdk.AnonCreds.prover_create_master_secret(PROVER_SECRET_ID)
+    except AnoncredsMasterSecretDuplicateNameError:
+        pass
 
     async def connection_routine():
         # Создадим новый приватный DID для соединения с Inviter-ом
@@ -89,7 +96,12 @@ async def run():
                         print('Prover: problem report:')
                         print(json.dumps(feature_0036.problem_report, indent=2, sort_keys=True))
 
-    await asyncio.wait([asyncio.ensure_future(listener_routine()), asyncio.ensure_future(connection_routine())])
+    await asyncio.wait(
+        [
+            asyncio.ensure_future(listener_routine()),
+            asyncio.ensure_future(connection_routine())
+        ]
+    )
 
 
 if __name__ == '__main__':
