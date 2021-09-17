@@ -29,7 +29,7 @@ async def run():
     except AnoncredsMasterSecretDuplicateNameError:
         pass
 
-    async def connection_routine():
+    async def connection_routine(invitation: Invitation):
         # Создадим новый приватный DID для соединения с Inviter-ом
         my_did, my_verkey = await sirius_sdk.DID.create_and_store_my_did()
         me = sirius_sdk.Pairwise.Me(did=my_did, verkey=my_verkey)
@@ -56,10 +56,12 @@ async def run():
             if isinstance(event.message, sirius_sdk.aries_rfc.OfferCredentialMessage):
                 offer: sirius_sdk.aries_rfc.OfferCredentialMessage = event.message
                 print('Prover: received credential offer')
-                issuer: sirius_sdk.Pairwise = event.pairwise
+                await asyncio.sleep(3)
+                issuer: sirius_sdk.Pairwise = await sirius_sdk.PairwiseList.load_for_verkey(event["sender_verkey"])
                 feature_0036 = sirius_sdk.aries_rfc.Holder(issuer, logger=Logger())
                 print('Prover: start to process offer...')
-                success, cred_id = await feature_0036.accept(offer=offer, master_secret_id=PROVER_SECRET_ID)
+                dkms = await sirius_sdk.ledger("indicio_test_network")
+                success, cred_id = await feature_0036.accept(offer=offer, master_secret_id=PROVER_SECRET_ID, ledger=dkms)
                 if success:
                     print(f'Prover: credential with cred-id: {cred_id} successfully stored to Wallet')
                 else:
@@ -77,10 +79,11 @@ async def run():
                         attr_value = await ainput("Enter " + attr_name + ":")
                         self_attested[attr_name] = attr_value
 
-                # Accept all incoming proof-requests for DEMO purpose
-                verifier: sirius_sdk.Pairwise = event.pairwise
-                print('Prover: start to verify...')
+                print('Prover: start verify...')
                 dkms = await sirius_sdk.ledger("indicio_test_network")
+
+                verifier = await sirius_sdk.PairwiseList.load_for_verkey(event["sender_verkey"])
+
                 feature_0037 = sirius_sdk.aries_rfc.Prover(
                     verifier=verifier,
                     ledger=dkms,
@@ -98,19 +101,29 @@ async def run():
 
     await asyncio.wait(
         [
-            asyncio.ensure_future(listener_routine()),
-            asyncio.ensure_future(connection_routine())
+            asyncio.ensure_future(listener_routine())
         ]
     )
+
+    while True:
+        case = await ainput("1 - Accept invitation \n\r"
+                            "exit - Exit \n\r"
+                            "Enter your option\n\r: ")
+        if case == '1':
+            data = decode(Image.open("C:\\Users\\Mikhail\\Downloads\\qr.png"))
+            str_data = data[0].data.decode('utf8')
+            index = str_data.find("?c_i=")
+            str_data = str_data[(index + 5):-1]
+            inv_json = json.loads(base64.b64decode(str_data.encode('utf8') + b'=' * (-len(str_data) % 4)))
+            invitation = Invitation(**inv_json)
+            await connection_routine(invitation)
+        elif case == 'exit':
+            break
+        else:
+            pass
 
 
 if __name__ == '__main__':
     sirius_sdk.init(**HOLDER['SDK'])
-    data = decode(Image.open("/home/mike/Pictures/qr.png"))
-    str_data = data[0].data.decode('utf8')
-    index = str_data.find("?c_i=")
-    str_data = str_data[(index+5):-1]
-    inv_json = json.loads(base64.b64decode(str_data.encode('utf8') + b'=' * (-len(str_data) % 4)))
-    invitation = Invitation(**inv_json)
 
     asyncio.get_event_loop().run_until_complete(run())
