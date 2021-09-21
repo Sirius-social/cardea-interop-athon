@@ -65,38 +65,6 @@ async def run_agent():
                 print(json.dumps(p2p.metadata, indent=2, sort_keys=True))
                 await sirius_sdk.PairwiseList.ensure_exists(p2p)
                 print('==================================')
-            elif isinstance(event.message, sirius_sdk.aries_rfc.RequestPresentationMessage):
-                print('========== RUN 0037 =============')
-                request: sirius_sdk.aries_rfc.RequestPresentationMessage = event.message
-                rfc_0037 = sirius_sdk.aries_rfc.Prover(
-                    verifier=event.pairwise,
-                    ledger=dkms,
-                    logger=logger,
-                    self_attested_identity={
-                        'email': 'minikspb@gmail.com',
-                        'city': 'Saint-Petersburg',
-                        'country': 'Russia',
-                        'phone': '+79111209222'
-                    }
-                )
-                success = await rfc_0037.prove(request, master_secret_id)
-                print(f'Success: {success}')
-                print('==================================')
-            elif isinstance(event.message, sirius_sdk.aries_rfc.OfferCredentialMessage):
-                print('========== RUN 0036 =============')
-                offer: sirius_sdk.aries_rfc.OfferCredentialMessage = event.message
-                rfc_0036 = sirius_sdk.aries_rfc.Holder(
-                    issuer=event.pairwise,
-                    logger=logger,
-                )
-                success, cred_id = await rfc_0036.accept(
-                    offer, master_secret_id,
-                    ledger=dkms,
-                    comment='Sirius SDK Holder'
-                )
-                print(f'Success: {success}')
-                print(f'Cred-ID: {cred_id}')
-                print('==================================')
             else:
                 print('========== Non processed message =============')
                 print(json.dumps(dict(event.message), indent=2, sort_keys=True))
