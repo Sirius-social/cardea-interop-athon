@@ -45,6 +45,7 @@ async def listener_routine():
         elif isinstance(event.message, sirius_sdk.aries_rfc.RequestPresentationMessage):
             proof_request: sirius_sdk.aries_rfc.RequestPresentationMessage = event.message
             print('Prover: received proof request')
+            await asyncio.sleep(3)
             self_attested = {}
             for referent_id, data in proof_request.proof_request.get('requested_attributes', {}).items():
                 if not data.get('restrictions', None):

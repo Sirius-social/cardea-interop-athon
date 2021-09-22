@@ -247,7 +247,7 @@ if __name__ == '__main__':
             case = await ainput("1 - Generate invitation \n\r"
                                 "2 - Issue lab result \n\r"
                                 "3 - issue vaccine \n\r"
-                                "4 - Exit"
+                                "4 - Exit \n\r"
                                 "Enter your option\n\r: ")
             if case == '1':
                 invitation, connection_key = await lab.generate_invitation()
