@@ -86,14 +86,12 @@ class Restaurant:
                     "nonce": await sirius_sdk.AnonCreds.generate_nonce(),
                     "name": "Trusted traveler  request",
                     "version": "1.0",
-                    "requested_predicates": {
-                        "lab_specimen_collected_date_predicate": {
+                    "requested_attributes": {
+                        "attr_lab_specimen_collected_date": {
                             'name': 'trusted_traveler_expiration_date_time',
-                            'p_type': '>=',
-                            'p_value': int(datetime.now().timestamp()),
-                            "restrictions": {
-                                "issuer_did": GOV_DID
-                            }
+                            # "restrictions": {
+                            #     "issuer_did": GOV_DID
+                            # }
                         }
                     }
                 }

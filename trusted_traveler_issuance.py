@@ -119,7 +119,7 @@ class Government:
                         "attr_lab_result": {
                             "name": "lab_result",
                             "restrictions": {
-                                "issuer_did": LAB_DID
+                                'schema_id': 'RuuJwd3JMffNwZ43DcJKN1:2:Lab_Result:1.4'
                             }
                         }
                     },
